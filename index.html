@@ -5,12 +5,75 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + Lit + TS</title>
-    <link rel="stylesheet" href="./src/index.css" />
     <script type="module" src="/src/my-element.ts"></script>
+    <script type="module" src="/src/components/input.lit.ts"></script>
+    <style>
+      body{
+        padding:10px
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 300px;
+        border: 2px dashed gainsboro;
+        padding:10px
+      }
+      #actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+      }
+    </style>
   </head>
   <body>
-    <my-element>
-      <h1>Vite + Lit = Cool</h1>
-    </my-element>
+
+  <form>
+    <div>
+      <label for="inputTest"></label>
+      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" required />
+    </div>
+    <hr>
+    <div id="actions">
+      <button type="submit">Submit</button>
+      <button type="reset">Reset</button>
+    </div>
+  </form>
+
+  <pre><output></output></pre>
+
+
+  <script>
+    /** Get a reference to the form */
+    const form = document.querySelector('form');
+    /** Get the output element to display form data in */
+    const output = document.querySelector('output');
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const form = event.target;
+
+      /** Get all of the form data */
+      const formData = new FormData(form);
+      const data = {};
+
+      formData.forEach((value, key) => {
+        if (data[key] !== undefined) {
+          // If the key already exists in data, convert its value to an array
+          if (!Array.isArray(data[key])) {
+            data[key] = [data[key]];
+          }
+          data[key].push(value);
+        } else {
+          // If the key doesn't exist in data, assign the value directly
+          data[key] = value;
+        }
+      });
+
+      output.innerHTML = JSON.stringify(data, null, 2);
+    });
+  </script>
   </body>
 </html>
