@@ -32,7 +32,7 @@
   <form>
     <div>
       <label for="inputTest"></label>
-      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" required />
+      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" required pattern="\d{4,4}"/>
     </div>
     <hr>
     <div id="actions">
@@ -75,5 +75,30 @@
       output.innerHTML = JSON.stringify(data, null, 2);
     });
   </script>
+
+
+<pre>
+
+  Input fields have the following states:
+
+  $untouched The field has not been touched yet
+  $touched The field has been touched
+  $pristine The field has not been modified yet
+  $dirty The field has been modified
+  $invalid The field content is not valid
+  $valid The field content is valid
+
+  They are all properties of the input field, and are either true or false.
+
+  Forms have the following states:
+
+  $pristine No fields have been modified yet
+  $dirty One or more have been modified
+  $invalid The form content is not valid
+  $valid The form content is valid
+  $submitted The form is submitted
+
+  They are all properties of the form, and are either true or false.
+  </pre>
   </body>
 </html>

@@ -86,7 +86,7 @@ export function FormControlMixin<
      * will reset whenever the control's formResetCallback is called.
      * @private
      */
-    #touched = false;
+    touched = false;
 
     /** An internal abort controller for cancelling pending async validation */
     #abortController?: AbortController;
@@ -117,7 +117,7 @@ export function FormControlMixin<
      * @private
      */
     #onFocus = (): void => {
-      this.#touched = true;
+      this.touched = true;
       this.#focused = true;
       this.#shouldShowError();
     };
@@ -135,7 +135,7 @@ export function FormControlMixin<
        * Set forceError to ensure error messages persist until
        * the value is changed.
        */
-      if (!this.validity.valid && this.#touched) {
+      if (!this.validity.valid && this.touched) {
         this.#forceError = true;
       }
       const showError = this.#shouldShowError();
@@ -157,7 +157,7 @@ export function FormControlMixin<
         );
         this.#awaitingValidationTarget = false;
       }
-      this.#touched = true;
+      this.touched = true;
       this.#forceError = true;
       this.#shouldShowError();
       this?.validationMessageCallback?.(this.showError ? this.internals.validationMessage : '');
@@ -327,7 +327,7 @@ export function FormControlMixin<
         return false;
       }
 
-      const showError = this.#forceError || (this.#touched && !this.validity.valid && !this.#focused);
+      const showError = this.#forceError || (this.touched && !this.validity.valid && !this.#focused);
 
       /**
        * At the time of writing Firefox doesn't support states
@@ -486,7 +486,7 @@ export function FormControlMixin<
 
      /** Reset control state when the form is reset */
     formResetCallback() {
-      this.#touched = false;
+      this.touched = false;
       this.#forceError = false;
       this.#shouldShowError();
       this.resetFormControl?.();

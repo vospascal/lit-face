@@ -26,6 +26,7 @@ export class MyInput extends FormControlMixin(LitElement) {
     @property({type: String}) placeholder?: string;
 
     @property({type: Boolean}) dirty = false;
+    @property({type: Boolean}) pristine = true;
 
       /** @private true */
     @query("input") input?: HTMLInputElement;
@@ -43,11 +44,26 @@ export class MyInput extends FormControlMixin(LitElement) {
         if (this.hasAttribute("value")) {
           this.setValue(this.value);
         }
-  
+
+        // important to sync the validation states
+        this.requestUpdate()
     }
 
     render() {
-        return html`<input
+      console.log(this.validity)
+      // the html template not in sync with this state
+
+      return html`
+        <pre>
+        dirty: ${this.dirty}
+        pristine: ${this.pristine}
+        touched: ${this.touched}
+        untouched: ${!this.touched}
+        valid: ${this.validity.valid}
+        invalid: ${!this.validity.valid}
+
+        </pre>
+        <input
             type="text"
             .value=${this.value}
             name=${this.name}
@@ -80,6 +96,7 @@ export class MyInput extends FormControlMixin(LitElement) {
     this.value = this.input!.value;
     emit(this, "input", this.value);
     this.dirty = true;
+    this.pristine = false;
     this.setValue(this.value);
   };
 
@@ -88,6 +105,7 @@ export class MyInput extends FormControlMixin(LitElement) {
     this.value = this.input!.value;
     emit(this, "change", this.value);
     this.dirty = true;
+    this.pristine = false;
     this.setValue(this.value);
   };
 
@@ -98,6 +116,8 @@ export class MyInput extends FormControlMixin(LitElement) {
   formResetCallback() {
     this.value = this.getAttribute("value");
     this.dirty = false;
+    this.pristine = true;
+    this.touched = false;
   }
 
   setCustomValidity(message: string) {
@@ -113,6 +133,24 @@ export class MyInput extends FormControlMixin(LitElement) {
     } else {
       form.submit();
     }
+  }
+
+
+  public formAssociatedCallback() {
+    console.log(this.internals.form)
+    console.log(this.form)
+    // debugger
+    // if (this.internals.form) {
+    //   // This relies on the form begin a 'uui-form':
+    //   if (this.internals.form.hasAttribute('submit-invalid')) {
+    //     this.pristine = false;
+    //   }
+      
+    //   this.internals.form.addEventListener('submit', () => {
+    //     console.log('submit')
+    //     this.pristine = false;
+    //   });
+    // }
   }
 }
 
