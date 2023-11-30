@@ -10,16 +10,21 @@ import { requiredValidatorChecked } from "./validation-rules"
 
 const SPACE = 'Space';
 const ENTER = 'Enter'
+const ARROW_LEFT = 'ArrowLeft';
+const ARROW_UP = 'ArrowUp';
+const ARROW_RIGHT = 'ArrowRight';
+const ARROW_DOWN = 'ArrowDown';
 
-@customElement('my-checkbox')
-export class MyCheckbox extends FormControl {
+@customElement('my-radio')
+export class MyRadio extends FormControl {
   //** @private */
-  inputType: InputType = "checkbox";
+  inputType: InputType = "radio";
 
 
   constructor(...args: any[]) {
     super(...args);
     this.addEventListener?.('keydown', this.#onKeydown);
+    this.addEventListener?.('click', this.#onClick);
   }
 
   static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
@@ -35,12 +40,11 @@ export class MyCheckbox extends FormControl {
 
   static formControlValidators = [requiredValidatorChecked];
 
-  @property({ type: String }) value?: string = "on";
+  @property({ type: String }) value?: string;
   @property({ type: String }) name?: string;
   @property({ type: Boolean }) disabled?: boolean = false;
   @property({ type: Boolean }) readonly?: boolean = false;
   @property({ type: Boolean, reflect: true }) checked?: boolean = false;
-  @property({ type: Boolean }) indeterminate?: boolean = false;
   @property({ type: Boolean }) required?: boolean = false;
 
 
@@ -88,13 +92,15 @@ export class MyCheckbox extends FormControl {
     return html`
         <span>${JSON.stringify(validationStatus)}</span>
         <input
-            type="checkbox"
+            type="radio"
             .value=${this.value}
             name=${this.name}
             ?disabled=${this.disabled}
             ?readonly=${this.readonly}
             ?required=${this.required}
             .checked=${live(this.checked)}
+            aria-checked=${this.checked}
+            aria-valid=${this.validity.valid}
             @change="${this.#onChange}"
         />
         `
@@ -126,13 +132,25 @@ export class MyCheckbox extends FormControl {
 
   #onSpaceCheck(event: KeyboardEvent) {
     event.preventDefault()
-    this.checked = !this.checked
+    if (this.checked) return
+
+    this.checked = true
     emit(this, "change", this.checked);
     if (this.checked) {
       this.setValue(this.value);
     } else {
       this.setValue("");
     }
+  }
+
+  #selectPrevious(event: KeyboardEvent) {
+    console.log('selectPrevious')
+    event.preventDefault()
+  }
+
+  #selectNext(event: KeyboardEvent) {
+    console.log('selectNext')
+    event.preventDefault()
   }
 
   #onKeydown(event: KeyboardEvent) {
@@ -143,14 +161,28 @@ export class MyCheckbox extends FormControl {
       case ENTER:
         this.#onEnterSubmit(event);
         break
+      case ARROW_LEFT:
+      case ARROW_UP:
+        this.#selectPrevious(event)
+        break
+      case ARROW_RIGHT:
+      case ARROW_DOWN:
+        this.#selectNext(event)
+        break
     }
   }
 
-  #onChange(event: Event) {
-    this.checked = !this.checked
+  #onClick(event: Event) {
+    if (this.checked || this.disabled) return
+    this.checked = true
     emit(this, "change", this.checked);
   }
 
+  #onChange(event: Event) {
+    if (this.checked) return
+    this.checked = true
+    emit(this, "change", this.checked);
+  }
 
   protected override updated(changedProperties: Map<string, any>) {
     super.updated(changedProperties);
@@ -179,4 +211,4 @@ export class MyCheckbox extends FormControl {
 
 }
 
-// todo: fix intermediate state
+//ria-invalid

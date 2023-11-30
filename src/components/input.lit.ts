@@ -98,7 +98,6 @@ export class MyInput extends FormControl {
 
   #onBlur = () => {
     emit(this, "blur");
-    this.setValue(this.value);
   };
 
   #onInput = (event: Event) => {
@@ -139,22 +138,24 @@ export class MyInput extends FormControl {
   }
 
 
-  public formAssociatedCallback() {
-    // console.log(this.internals.form)
-    // console.log(this.form)
-    // debugger
-    // if (this.internals.form) {
-    //   // This relies on the form begin a 'uui-form':
-    //   if (this.internals.form.hasAttribute('submit-invalid')) {
-    //     this.pristine = false;
-    //   }
-
-    //   this.internals.form.addEventListener('submit', () => {
-    //     console.log('submit')
-    //     this.pristine = false;
-    //   });
-    // }
+  protected override updated(changedProperties: Map<string, any>) {
+    super.updated(changedProperties);
+    if (changedProperties.has('invalid')) {
+      if (this.validity.valid) {
+        this.setAttribute('aria-invalid', 'true');
+      } else {
+        this.removeAttribute('aria-invalid');
+      }
+    }
+    if (changedProperties.has('disabled')) {
+      if (this.disabled) {
+        this.setAttribute('aria-disabled', 'true');
+      } else {
+        this.removeAttribute('aria-disabled');
+      }
+    }
   }
+
 }
 
 //ria-invalid
