@@ -119,7 +119,7 @@ export class MyInput extends FormControl {
   }
 
   formResetCallback() {
-    this.value = this.getAttribute("value");
+    this.value = this.getAttribute('value') || '';
   }
 
   setCustomValidity(message: string) {

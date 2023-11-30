@@ -1,34 +1,37 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Lit + TS</title>
-    <script type="module" src="/src/my-element.ts"></script>
-    <script type="module" src="/src/components/input.lit.ts"></script>
-    <script type="module" src="/src/components/checkbox.lit.ts"></script>
-    <script type="module" src="/src/components/radio.lit.ts"></script>
-    <style>
-      body{
-        padding:10px
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        max-width: 300px;
-        border: 2px dashed gainsboro;
-        padding:10px
-      }
-      #actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-      }
 
-      /* my-input:--pristine{
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + Lit + TS</title>
+  <script type="module" src="/src/my-element.ts"></script>
+  <script type="module" src="/src/components/input.lit.ts"></script>
+  <script type="module" src="/src/components/checkbox.lit.ts"></script>
+  <script type="module" src="/src/components/radio.lit.ts"></script>
+  <style>
+    body {
+      padding: 10px
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 300px;
+      border: 2px dashed gainsboro;
+      padding: 10px
+    }
+
+    #actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    /* my-input:--pristine{
         color:white;
         background-color:  cornflowerblue;
         padding:2px;
@@ -69,46 +72,75 @@
         padding:2px;
       } */
 
-      /* my-input:--invalid:--touched:not(:focus), */
-      /* my-input:--invalid:--touched  {
+    /* my-input:--invalid:--touched:not(:focus), */
+    /* my-input:--invalid:--touched  {
         background-color: red;
       } */
 
-      /* my-input:--valid:--touched:not(:focus), */
-      /* my-input:--valid:--touched  {
+    /* my-input:--valid:--touched:not(:focus), */
+    /* my-input:--valid:--touched  {
         background-color: green;
       } */
-    </style>
-  </head>
-  <body>
+  </style>
+</head>
+
+<body>
 
   <form>
     <div>
       <label for="inputTest">inputTest</label>
-      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" required pattern="\d{4,4}"></my-input>
-      <br/>
+      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" required
+        pattern="\d{4,4}"></my-input>
+      <br />
       <label for="inputTesting">inputTesting</label>
       <my-input name="myInput" value="" id="inputTesting" required pattern="\d{4,4}"></my-input>
-      <br/>
+      <br />
       <label for="checkboxSingle">checkboxSingle</label>
-      <my-checkbox name="checkboxSingle" id="checkboxSingle" required ></my-checkbox>
+      <my-checkbox name="checkboxSingle" id="checkboxSingle" required></my-checkbox>
     </div>
     <div>
       <label for="checkboxGroup[0]">checkboxGroup[0]</label>
       <my-checkbox name="checkboxGroup" value="cake" id="checkboxGroup[0]" required></my-checkbox>
-      <br/>
+      <br />
       <label for="checkboxGroup[1]">checkboxGroup[1]</label>
-      <my-checkbox name="checkboxGroup" value="icecream" id="checkboxGroup[1]" required></my-checkbox>
+      <my-checkbox name="checkboxGroup" value="ice cream" id="checkboxGroup[1]" required></my-checkbox>
+      <br />
+      <label for="checkboxGroup[2]">checkboxGroup[2]</label>
+      <my-checkbox name="checkboxGroup" value="cotton candy" id="checkboxGroup[2]" required checked></my-checkbox>
+      <br />
+      <label for="checkboxGroup[3]">checkboxGroup[3]</label>
+      <my-checkbox name="checkboxGroup" value="cupcakes" id="checkboxGroup[3]" required checked disabled></my-checkbox>
+      <br />
+      <label for="checkboxGroup[4]">checkboxGroup[4]</label>
+      <my-checkbox name="checkboxGroup" value="marshmallows" id="checkboxGroup[4]" required disabled></my-checkbox>
     </div>
-    <hr/>
+    <hr />
     <div>
       <label for="radioGroup[0]">radioGroup[0]</label>
-      <my-radio name="radioGroup" value="cake" id="radioGroup[0]" required></my-radio>
-      <br/>
+      <my-radio name="radioGroup" value="iced tea" id="radioGroup[0]" required></my-radio>
+      <br />
+
       <label for="radioGroup[1]">radioGroup[1]</label>
-      <my-radio name="radioGroup" value="icecream" id="radioGroup[1]" required></my-radio>
+      <my-radio name="radioGroup" value="soda" id="radioGroup[1]" required></my-radio>
+
+      <br />
+      <label for="radioGroup[2]">radioGroup[2]</label>
+      <my-radio name="radioGroup" value="smoothie" id="radioGroup[2]" required></my-radio>
+
+      <br />
+      <label for="radioGroup[3]">radioGroup[3]</label>
+      <my-radio name="radioGroup" value="juice" id="radioGroup[3]" required checked></my-radio>
+
+      <br />
+      <label for="radioGroup[4]">radioGroup[4]</label>
+      <my-radio name="radioGroup" value="lemonade" id="radioGroup[4]" required checked disabled></my-radio>
+
+      <br />
+      <label for="radioGroup[5]">radioGroup[5]</label>
+      <my-radio name="radioGroup" value="milkshakes" id="radioGroup[5]" required disabled></my-radio>
+
     </div>
-    <hr/>
+    <hr />
     <div id="actions">
       <button type="submit">Submit</button>
       <button type="reset">Reset</button>
@@ -133,6 +165,7 @@
       const formData = new FormData(form);
       const data = {};
 
+
       formData.forEach((value, key) => {
         if (data[key] !== undefined) {
           // If the key already exists in data, convert its value to an array
@@ -151,15 +184,21 @@
   </script>
 
 
-<pre>
-  
-  Input fields have the following states:
-  - Untouched: The form control has not been interacted with yet. This is the initial state when the form loads.
-  - Touched: The form control has been blurred or focused at least once. It indicates that the user has interacted with the control.
-  - Pristine: The form control has not been modified by the user. It is in its initial state without any changes.
-  - Dirty: The form control has been modified by the user. It indicates that the user has changed the value of the control.
-  - Invalid: The data entered by the user doesn't meet the validation criteria. It's often associated with validation rules set for the form control.
-  - Valid: The data entered by the user meets the validation criteria. The control is considered valid according to the defined rules.
-  </pre>
-  </body>
+  <p>Input fields have the following states:</p>
+  <ul>
+    <li>- Untouched: The form control has not been interacted with yet. This is the initial state when the form loads.
+    </li>
+    <li>- Touched: The form control has been blurred or focused at least once. It indicates that the user has interacted
+      with the control.</li>
+    <li>- Pristine: The form control has not been modified by the user. It is in its initial state without any changes.
+    </li>
+    <li>- Dirty: The form control has been modified by the user. It indicates that the user has changed the value of the
+      control.</li>
+    <li>- Invalid: The data entered by the user doesn't meet the validation criteria. It's often associated with
+      validation rules set for the form control.</li>
+    <li>- Valid: The data entered by the user meets the validation criteria. The control is considered valid according
+      to the defined rules.</li>
+  </ul>
+</body>
+
 </html>

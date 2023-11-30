@@ -602,8 +602,7 @@ class FormControl extends LitElement {
     const checkableInputTypes = ["checkbox", "radio"] as InputType[];
     return checkableInputTypes.includes(this.inputType);
   }
-
-
+  
 
 }
 

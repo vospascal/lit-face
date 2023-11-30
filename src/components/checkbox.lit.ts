@@ -39,7 +39,7 @@ export class MyCheckbox extends FormControl {
   @property({ type: String }) name?: string;
   @property({ type: Boolean }) disabled?: boolean = false;
   @property({ type: Boolean }) readonly?: boolean = false;
-  @property({ type: Boolean, reflect: true }) checked?: boolean = false;
+  @property({ type: Boolean }) checked?: boolean = false;
   @property({ type: Boolean }) indeterminate?: boolean = false;
   @property({ type: Boolean }) required?: boolean = false;
 
@@ -107,8 +107,9 @@ export class MyCheckbox extends FormControl {
   }
 
   formResetCallback() {
-    this.value = this.getAttribute("value");
-    this.checked = this.getAttribute("checked");
+    // The checked property does not reflect, so the original attribute set by
+    // the user is used to determine the default value.
+    this.checked = this.hasAttribute('checked');
   }
 
   setCustomValidity(message: string) {

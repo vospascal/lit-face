@@ -44,7 +44,7 @@ export class MyRadio extends FormControl {
   @property({ type: String }) name?: string;
   @property({ type: Boolean }) disabled?: boolean = false;
   @property({ type: Boolean }) readonly?: boolean = false;
-  @property({ type: Boolean, reflect: true }) checked?: boolean = false;
+  @property({ type: Boolean }) checked?: boolean = false;
   @property({ type: Boolean }) required?: boolean = false;
 
 
@@ -94,11 +94,11 @@ export class MyRadio extends FormControl {
         <input
             type="radio"
             .value=${this.value}
+            .checked=${live(this.checked)}
             name=${this.name}
             ?disabled=${this.disabled}
             ?readonly=${this.readonly}
             ?required=${this.required}
-            .checked=${live(this.checked)}
             aria-checked=${this.checked}
             aria-valid=${this.validity.valid}
             @change="${this.#onChange}"
@@ -113,8 +113,9 @@ export class MyRadio extends FormControl {
   }
 
   formResetCallback() {
-    this.value = this.getAttribute("value");
-    this.checked = this.getAttribute("checked");
+    // The checked property does not reflect, so the original attribute set by
+    // the user is used to determine the default value.
+    this.checked = this.hasAttribute('checked');
   }
 
   setCustomValidity(message: string) {
