@@ -1,9 +1,9 @@
-import { Constructor, CustomValidityState, FormControlInterface, FormValue, IControlHost, validationMessageCallback, Validator } from './types.ts';
+import { state, property } from 'lit/decorators.js';
+import { CustomValidityState, FormValue, validationMessageCallback, Validator } from './types.ts';
+import { LitElement  } from 'lit'
 
-export function FormControlMixin<
-  TBase extends Constructor<HTMLElement & IControlHost> & { observedAttributes?: string [] }
->(SuperClass: TBase) {
-  class FormControl extends SuperClass {
+class FormControl extends LitElement {
+
     /** Wires up control instances to be form associated */
     static get formAssociated(): boolean {
       return true;
@@ -86,7 +86,9 @@ export function FormControlMixin<
      * will reset whenever the control's formResetCallback is called.
      * @private
      */
-    touched = false;
+    @state() touched = false;
+    @state() dirty = false;
+    @state() pristine = true;
 
     /** An internal abort controller for cancelling pending async validation */
     #abortController?: AbortController;
@@ -118,9 +120,21 @@ export function FormControlMixin<
      */
     #onFocus = (): void => {
       this.touched = true;
+      this.touchedState(this.touched)
       this.#focused = true;
       this.#shouldShowError();
     };
+
+    #onChange = (): void => {
+      this.dirty = true;
+      this.pristine = false;
+    }
+
+    #onInput = (): void => {
+      this.dirty = true;
+      this.pristine = false;
+    }
+
 
     /**
      * Reset this[focused] on blur
@@ -204,8 +218,14 @@ export function FormControlMixin<
       super(...args);
       this.addEventListener?.('focus', this.#onFocus);
       this.addEventListener?.('blur', this.#onBlur);
+      this.addEventListener?.('change', this.#onChange)
+      this.addEventListener?.('change', this.#onInput)
       this.addEventListener?.('invalid', this.#onInvalid);
       this.setValue(null);
+      this.form?.addEventListener?.('submit', () => {
+        console.log('332232332')
+      
+      })
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -333,11 +353,8 @@ export function FormControlMixin<
        * At the time of writing Firefox doesn't support states
        * TODO: Remove when check for states when fully support is in place
        */
-      if (showError && this.internals.states) {
-        this.internals.states.add('--show-error');
-      } else if (this.internals.states) {
-        this.internals.states.delete('--show-error');
-      }
+      this.validState(this.validity.valid)
+      this.touchedState(this.touched)
 
       return showError;
     }
@@ -464,6 +481,7 @@ export function FormControlMixin<
          */
         this.#awaitingValidationTarget = true;
       }
+      
     }
 
     /** Process the validator message attribute */
@@ -487,6 +505,9 @@ export function FormControlMixin<
      /** Reset control state when the form is reset */
     formResetCallback() {
       this.touched = false;
+      this.dirty = false;
+      this.pristine = true;
+
       this.#forceError = false;
       this.#shouldShowError();
       this.resetFormControl?.();
@@ -494,8 +515,71 @@ export function FormControlMixin<
       this.validationMessageCallback?.(
         this.#shouldShowError() ? this.validationMessage : ''
       );
-    }
-  }
 
-  return FormControl as Constructor<FormControlInterface> & TBase;
+      this.touchedState(this.touched)
+      this.pristineState(this.pristine)
+    }
+
+
+    checkedState(flag:boolean): void {
+      if (flag) {
+        this.internals.states.add('--checked');
+      } else {
+        this.internals.states.delete('--checked');
+      }
+    }
+
+    dirtyState(flag:boolean): void {
+      if(!this.internals.states) return
+      if (flag) {
+        this.internals.states.add('--dirty');
+      } else {
+        this.internals.states.delete('--dirty');
+      }
+    }
+
+    pristineState(flag:boolean): void {
+      if(!this.internals.states) return
+      if (flag) {
+        this.internals.states.add('--pristine');
+      } else {
+        this.internals.states.delete('--pristine');
+      }
+    }
+    
+    touchedState(flag:boolean): void {
+      if(!this.internals.states) return
+      if (flag) {
+        this.internals.states.add('--touched');
+        this.internals.states.delete('--untouched');
+      } else {
+        this.internals.states.add('--untouched');
+        this.internals.states.delete('--touched');
+      }
+    }
+
+    validState(flag:boolean): void {
+      if(!this.internals.states) return
+      if (flag) {
+        this.internals.states.add('--valid');
+        this.internals.states.delete('--invalid');
+      } else {
+        this.internals.states.add('--invalid');
+        this.internals.states.delete('--valid');
+      }
+    }
+
+    errorState(flag:boolean): void {
+      if(!this.internals.states) return
+      if (flag) {
+        this.internals.states.add('--error');
+      } else {
+        this.internals.states.delete('--error');
+      }
+    }
+
 }
+
+
+
+export default FormControl

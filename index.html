@@ -25,14 +25,67 @@
         justify-content: flex-end;
         gap: 0.5rem;
       }
+
+      /* my-input:--pristine{
+        color:white;
+        background-color:  cornflowerblue;
+        padding:2px;
+      }
+
+      my-input:--dirty{
+        color:white;
+        background-color: saddlebrown;
+        padding:2px;
+      }
+
+      my-input:--touched{
+        color:white;
+        background-color:  palevioletred;
+        padding:2px;
+      }
+      my-input:--untouched {
+        color:white;
+        background-color: palevioletred;
+        padding:2px;
+      }
+
+      my-input:--valid {
+        color:white;
+        background-color:  greenyellow;
+        padding:2px;
+      }
+
+      my-input:--invalid {
+        color:white;
+        background-color: orangered;
+        padding:2px;
+      }
+
+      my-input:--error {
+        color:white;
+        background-color:  purple;
+        padding:2px;
+      } */
+
+      /* my-input:--invalid:--touched:not(:focus), */
+      /* my-input:--invalid:--touched  {
+        background-color: red;
+      } */
+
+      /* my-input:--valid:--touched:not(:focus), */
+      /* my-input:--valid:--touched  {
+        background-color: green;
+      } */
     </style>
   </head>
   <body>
 
   <form>
     <div>
-      <label for="inputTest"></label>
-      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" required pattern="\d{4,4}"/>
+      <label for="inputTest">inputTest</label>
+      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" required pattern="\d{4,4}"></my-input>
+      <label for="inputTesting">inputTesting</label>
+      <my-input name="myInput" value="" placeholder="type something" id="inputTesting" required pattern="\d{4,4}"></my-input>
     </div>
     <hr>
     <div id="actions">
@@ -78,27 +131,14 @@
 
 
 <pre>
-
+  
   Input fields have the following states:
-
-  $untouched The field has not been touched yet
-  $touched The field has been touched
-  $pristine The field has not been modified yet
-  $dirty The field has been modified
-  $invalid The field content is not valid
-  $valid The field content is valid
-
-  They are all properties of the input field, and are either true or false.
-
-  Forms have the following states:
-
-  $pristine No fields have been modified yet
-  $dirty One or more have been modified
-  $invalid The form content is not valid
-  $valid The form content is valid
-  $submitted The form is submitted
-
-  They are all properties of the form, and are either true or false.
+  - Untouched: The form control has not been interacted with yet. This is the initial state when the form loads.
+  - Touched: The form control has been blurred or focused at least once. It indicates that the user has interacted with the control.
+  - Pristine: The form control has not been modified by the user. It is in its initial state without any changes.
+  - Dirty: The form control has been modified by the user. It indicates that the user has changed the value of the control.
+  - Invalid: The data entered by the user doesn't meet the validation criteria. It's often associated with validation rules set for the form control.
+  - Valid: The data entered by the user meets the validation criteria. The control is considered valid according to the defined rules.
   </pre>
   </body>
 </html>

@@ -1,7 +1,7 @@
-import {FormControlMixin} from "../form-control";
+import FormControl from "../form-control/FormControl";
 
-import { LitElement, PropertyValueMap, css, html } from 'lit'
-import { customElement, property, query } from 'lit/decorators.js'
+import { LitElement, PropertyValueMap, css, html,  } from 'lit'
+import { customElement, property, query, state } from 'lit/decorators.js'
 
 import emit from "./emit"
 
@@ -9,8 +9,17 @@ import {requiredValidator, minLengthValidator, patternValidator} from "./validat
 
 
 @customElement('my-input')
-export class MyInput extends FormControlMixin(LitElement) {
+export class MyInput extends FormControl {
     static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
+
+    static styles = css`
+      :host(:--invalid:--touched:not(:focus)) input {
+        background-color: red;
+      }
+      :host(:--valid:--touched) input {
+        background-color: green;
+      }
+    `;
 
     static formControlValidators = [requiredValidator, minLengthValidator, patternValidator];
 
@@ -25,8 +34,7 @@ export class MyInput extends FormControlMixin(LitElement) {
 
     @property({type: String}) placeholder?: string;
 
-    @property({type: Boolean}) dirty = false;
-    @property({type: Boolean}) pristine = true;
+
 
       /** @private true */
     @query("input") input?: HTMLInputElement;
@@ -53,16 +61,19 @@ export class MyInput extends FormControlMixin(LitElement) {
       console.log(this.validity)
       // the html template not in sync with this state
 
-      return html`
-        <pre>
-        dirty: ${this.dirty}
-        pristine: ${this.pristine}
-        touched: ${this.touched}
-        untouched: ${!this.touched}
-        valid: ${this.validity.valid}
-        invalid: ${!this.validity.valid}
+      const validationStatus = {
+        dirty: this.dirty,
+        pristine: this.pristine,
+        touched: this.touched,
+        untouched: !this.touched,
+        valid: this.validity.valid,
+        invalid: !this.validity.valid
+      }
+      
+      console.table(validationStatus)
 
-        </pre>
+      return html`
+        <span>${JSON.stringify(validationStatus)}</span>
         <input
             type="text"
             .value=${this.value}
@@ -76,7 +87,8 @@ export class MyInput extends FormControlMixin(LitElement) {
             placeholder=${this.placeholder}
             required=${this.required}
             pattern=${this.pattern}
-        />`
+        />
+        `
     }
 
 
@@ -87,7 +99,6 @@ export class MyInput extends FormControlMixin(LitElement) {
 
   #onBlur = () => {
     emit(this, "blur");
-    this.dirty = true;
     this.setValue(this.value);
   };
 
@@ -95,8 +106,6 @@ export class MyInput extends FormControlMixin(LitElement) {
     event.stopPropagation();
     this.value = this.input!.value;
     emit(this, "input", this.value);
-    this.dirty = true;
-    this.pristine = false;
     this.setValue(this.value);
   };
 
@@ -104,8 +113,6 @@ export class MyInput extends FormControlMixin(LitElement) {
     event.stopPropagation();
     this.value = this.input!.value;
     emit(this, "change", this.value);
-    this.dirty = true;
-    this.pristine = false;
     this.setValue(this.value);
   };
 
@@ -115,9 +122,6 @@ export class MyInput extends FormControlMixin(LitElement) {
 
   formResetCallback() {
     this.value = this.getAttribute("value");
-    this.dirty = false;
-    this.pristine = true;
-    this.touched = false;
   }
 
   setCustomValidity(message: string) {
@@ -137,8 +141,8 @@ export class MyInput extends FormControlMixin(LitElement) {
 
 
   public formAssociatedCallback() {
-    console.log(this.internals.form)
-    console.log(this.form)
+    // console.log(this.internals.form)
+    // console.log(this.form)
     // debugger
     // if (this.internals.form) {
     //   // This relies on the form begin a 'uui-form':

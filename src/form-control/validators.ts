@@ -1,5 +1,4 @@
-import { Validator } from './index.ts';
-import { FormControlInterface, FormValue } from './types.ts';
+import { Validator, FormControlInterface, FormValue } from './types.ts';
 
 export const requiredValidator: Validator = {
   attribute: 'required',
