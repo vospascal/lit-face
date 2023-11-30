@@ -95,6 +95,7 @@ export class MyCheckbox extends FormControl {
             ?readonly=${this.readonly}
             ?required=${this.required}
             .checked=${live(this.checked)}
+            .indeterminate="${this.indeterminate}"
             @change="${this.#onChange}"
         />
         `

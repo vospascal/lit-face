@@ -177,16 +177,40 @@ export class MyRadio extends FormControl {
     if (this.checked || this.disabled) return
     this.checked = true
     emit(this, "change", this.checked);
+    this.setValue(this.value);
+    this.uncheckSiblings()
   }
 
   #onChange(event: Event) {
     if (this.checked) return
     this.checked = true
     emit(this, "change", this.checked);
+    this.setValue(this.value);
+    this.uncheckSiblings()
+  }
+
+
+  uncheckSiblings() {
+    this.getRootNode().querySelectorAll(`my-radio[name="${this.name}"]`).forEach((item => {
+      console.log(item, this, item !== this)
+      // set property to false
+      item !== this && (item.checked = false)
+
+    }))
   }
 
   protected override updated(changedProperties: Map<string, any>) {
     super.updated(changedProperties);
+
+    // if checked prop has changed broadcast right value
+    if (changedProperties.has('checked')) {
+      if (this.checked) {
+        this.setValue(this.value)
+      } else {
+        this.setValue(null)
+      }
+    }
+
     if (changedProperties.has('invalid')) {
       if (this.validity.valid) {
         this.setAttribute('aria-invalid', 'true');
