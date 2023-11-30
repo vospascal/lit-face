@@ -2,7 +2,18 @@ import { state, property } from 'lit/decorators.js';
 import { CustomValidityState, FormValue, validationMessageCallback, Validator } from './types.ts';
 import { LitElement  } from 'lit'
 
+
+const inputTypes = [
+  "checkbox",
+  "radio",
+  "text",
+] as const;
+
+export type InputType = (typeof inputTypes)[number];
+
 class FormControl extends LitElement {
+    //** @private */
+    inputType: InputType = "text";
 
     /** Wires up control instances to be form associated */
     static get formAssociated(): boolean {
@@ -222,10 +233,10 @@ class FormControl extends LitElement {
       this.addEventListener?.('change', this.#onInput)
       this.addEventListener?.('invalid', this.#onInvalid);
       this.setValue(null);
-      this.form?.addEventListener?.('submit', () => {
-        console.log('332232332')
+      // this.form?.addEventListener?.('submit', () => {
+      //   console.log('332232332')
       
-      })
+      // })
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
@@ -576,6 +587,11 @@ class FormControl extends LitElement {
       } else {
         this.internals.states.delete('--error');
       }
+    }
+
+    isCheckable() {
+      const checkableInputTypes = ["checkbox", "radio"] as InputType[];
+      return checkableInputTypes.includes(this.inputType);
     }
 
 }

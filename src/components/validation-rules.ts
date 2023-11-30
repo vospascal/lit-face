@@ -18,6 +18,17 @@ export const requiredValidator: SyncValidator = {
       return !required || !!value;
     },
   };
+
+  export const requiredValidatorChecked: SyncValidator = {
+    attribute: "required",
+    key: "valueMissing",
+    message() {
+      return "Please tick this box if you want to proceed.";
+    },
+    isValid({ required, checked }: HTMLElement & { required: boolean; checked: boolean }, value: FormValue): boolean {
+      return !required || (required && checked);
+    },
+  };
   
   export const minLengthValidator: SyncValidator = {
     attribute: "minlength",

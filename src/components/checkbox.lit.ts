@@ -2,14 +2,15 @@ import FormControl, { InputType } from "../form-control/FormControl";
 
 import { LitElement, PropertyValueMap, css, html, nothing } from 'lit'
 import { customElement, property, query, state } from 'lit/decorators.js'
+import { live } from "lit/directives/live.js";
 
 import emit from "./emit"
 
-import { requiredValidator, minLengthValidator, patternValidator } from "./validation-rules"
+import { requiredValidatorChecked } from "./validation-rules"
 
 
-@customElement('my-input')
-export class MyInput extends FormControl {
+@customElement('my-checkbox')
+export class MyCheckbox extends FormControl {
   //** @private */
   inputType: InputType = "text";
 
@@ -17,29 +18,29 @@ export class MyInput extends FormControl {
 
   static styles = css`
       :host(:--invalid:--touched:not(:focus)) input {
-        border: 2px dashed red !important;
+        outline: 2px dashed red !important;
       }
       :host(:--valid:--touched) input {
-        border: 2px dashed green!important;
+        outline: 2px dashed green!important;
       }
     `;
 
-  static formControlValidators = [requiredValidator, minLengthValidator, patternValidator];
+  static formControlValidators = [requiredValidatorChecked];
 
-  @property({ type: String }) value?: string;
+  @property({ type: String }) value?: string = "on";
   @property({ type: String }) name?: string;
   @property({ type: Boolean }) disabled?: boolean = false;
   @property({ type: Boolean }) readonly?: boolean = false;
-  @property({ type: Boolean }) required: boolean = false;
-  @property({ type: String }) pattern?: string;
-  @property({ type: String }) placeholder?: string;
+  @property({ type: Boolean, reflect: true }) checked?: boolean = false;
+  @property({ type: Boolean }) indeterminate?: boolean = false;
+  @property({ type: Boolean }) required?: boolean = false;
 
 
   /** @private true */
-  @query("input") input?: HTMLInputElement;
+  @query("input") checkbox?: HTMLInputElement;
 
   override get validationTarget(): HTMLInputElement {
-    return this.input as HTMLInputElement;
+    return this.checkbox as HTMLInputElement;
   }
 
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
@@ -48,13 +49,23 @@ export class MyInput extends FormControl {
       return;
     }
 
-    if (this.hasAttribute("value")) {
-      this.setValue(this.value);
+    if (this.hasAttribute("value") && !this.isCheckable()) {
+      this.setValue(this.value || "");
     }
 
-    // // important to sync the validation states
-    // this.requestUpdate()
+    if (this.hasAttribute("value") && this.isCheckable()) {
+      if (this.checked) {
+        this.setValue(this.value || "on");
+      } else {
+        this.setValue(null);
+      }
+    }
   }
+
+  // override shouldFormValueUpdate(): boolean {
+  //   return this.checked;
+  // }
+
 
   render() {
     // the html template not in sync with this state
@@ -73,18 +84,18 @@ export class MyInput extends FormControl {
     return html`
         <span>${JSON.stringify(validationStatus)}</span>
         <input
-            type="text"
+            type="checkbox"
             .value=${this.value}
             name=${this.name}
             @focus=${this.#onFocus}
             @blur=${this.#onBlur}
-            @input=${this.#onInput}
             @change=${this.#onChange}
+            @keydown=${this.#onKeydown}
             ?disabled=${this.disabled}
             ?readonly=${this.readonly}
-            placeholder=${this.placeholder || nothing}
-            required=${this.required || nothing}
-            pattern=${this.pattern || nothing}
+            ?required=${this.required}
+            .checked=${live(this.checked)}
+            aria-checked=${this.checked}
             aria-valid=${this.validity.valid}
         />
         `
@@ -98,21 +109,13 @@ export class MyInput extends FormControl {
 
   #onBlur = () => {
     emit(this, "blur");
-    this.setValue(this.value);
-  };
-
-  #onInput = (event: Event) => {
-    event.stopPropagation();
-    this.value = this.input!.value;
-    emit(this, "input", this.value);
-    this.setValue(this.value);
   };
 
   #onChange = (event: Event) => {
-    event.stopPropagation();
-    this.value = this.input!.value;
-    emit(this, "change", this.value);
-    this.setValue(this.value);
+    console.log('onClick')
+    this.checked = !this.checked;
+    emit(this, "click", this.checked);
+    this.#setChecked()
   };
 
   formDisabledCallback(disabled: boolean) {
@@ -121,13 +124,14 @@ export class MyInput extends FormControl {
 
   formResetCallback() {
     this.value = this.getAttribute("value");
+    this.checked = this.getAttribute("checked");
   }
 
   setCustomValidity(message: string) {
     this.internals.setValidity({ customError: !!message, valid: !message }, message);
   }
 
-  onEnterSubmit(event: KeyboardEvent) {
+  #onEnterSubmit(event: KeyboardEvent) {
     if (event.key !== "Enter") return;
 
     const form = this.internals.form;
@@ -135,6 +139,30 @@ export class MyInput extends FormControl {
       form.requestSubmit();
     } else {
       form.submit();
+    }
+  }
+
+  #onSpaceCheck(event: KeyboardEvent) {
+    if (event.code !== "Space") {
+      return;
+    }
+    this.checked = !this.checked
+    emit(this, "change", this.checked);
+    this.#setChecked()
+  }
+  
+  #onKeydown(event: KeyboardEvent) {
+    event.stopImmediatePropagation()
+    console.log('onKeydown')
+    this.#onEnterSubmit(event);
+    this.#onSpaceCheck(event)
+  }
+
+  #setChecked(){
+    if(this.checked){
+      this.setValue(this.value);
+    } else {
+      this.setValue("");
     }
   }
 
