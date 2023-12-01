@@ -8,6 +8,8 @@ const inputTypes = [
   "checkbox",
   "radio",
   "text",
+  "textarea",
+  "number",
 ] as const;
 
 export type InputType = (typeof inputTypes)[number];

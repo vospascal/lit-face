@@ -5,43 +5,47 @@ import { customElement, property, query, state } from 'lit/decorators.js'
 
 import emit from "./emit"
 
-import { requiredValidator, minLengthValidator, patternValidator } from "./validation-rules"
+import { requiredValidator, minLengthValidator, textareaLengthValidator } from "./validation-rules"
 
 
-@customElement('my-input')
-export class MyInput extends FormControl {
+@customElement('my-textarea')
+export class MyTextarea extends FormControl {
   //** @private */
-  inputType: InputType = "text";
+  inputType: InputType = "textarea";
 
   static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
   static styles = css`
-    :host(:--invalid:--touched:not(:focus)) input {
+    :host(:--invalid:--touched:not(:focus)) textarea {
       outline: 2px dotted red;
       outline-offset: 2px;
     }
-    :host(:--valid:--touched) input {
+    :host(:--valid:--touched) textarea {
       outline: 2px dotted green;
       outline-offset: 2px;
     }
   `;
 
-  static formControlValidators = [requiredValidator, minLengthValidator, patternValidator];
+  static formControlValidators = [requiredValidator, minLengthValidator, textareaLengthValidator];
 
-  @property({ type: String }) value?: string;
+  @property({ type: String }) value?: string = "";
   @property({ type: String }) name?: string;
   @property({ type: Boolean }) disabled?: boolean = false;
   @property({ type: Boolean }) readonly?: boolean = false;
   @property({ type: Boolean }) required: boolean = false;
-  @property({ type: String }) pattern?: string;
   @property({ type: String }) placeholder?: string;
 
+  @property({ type: String }) maxlength?: string;
+  @property({ type: String }) minlength?: string;
+  @property({ type: String }) rows?: string;
+  @property({ type: String }) cols?: string;
+  @property({ type: String }) wrap?: string;
 
   /** @private true */
-  @query("input") input?: HTMLInputElement;
+  @query("textarea") input?: HTMLTextAreaElement;
 
-  override get validationTarget(): HTMLInputElement {
-    return this.input as HTMLInputElement;
+  override get validationTarget(): HTMLTextAreaElement {
+    return this.input as HTMLTextAreaElement;
   }
 
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
@@ -72,8 +76,7 @@ export class MyInput extends FormControl {
 
     return html`
         <span>${JSON.stringify(validationStatus)}</span>
-        <input
-            type="text"
+        <textarea
             .value=${this.value}
             name=${this.name}
             @focus=${this.#onFocus}
@@ -84,11 +87,14 @@ export class MyInput extends FormControl {
             ?readonly=${this.readonly}
             placeholder=${this.placeholder || nothing}
             required=${this.required || nothing}
-            pattern=${this.pattern || nothing}
+            maxlength=${this.maxlength || nothing}
+            minlength=${this.minlength || nothing}
+            rows=${this.rows || nothing}
+            cols=${this.cols || nothing}
+            wrap=${this.wrap || nothing}            
         />
-        `
+    `
   }
-
 
 
   #onFocus = () => {

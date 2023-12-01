@@ -10,6 +10,7 @@
   <script type="module" src="/src/components/input.lit.ts"></script>
   <script type="module" src="/src/components/checkbox.lit.ts"></script>
   <script type="module" src="/src/components/radio.lit.ts"></script>
+  <script type="module" src="/src/components/textarea.lit.ts"></script>
   <style>
     body {
       padding: 10px
@@ -142,6 +143,24 @@
 
     </div>
     <hr />
+    <div>
+      <br />
+      <label for="textarea[0]">textarea[0]</label>
+      <my-textarea name="textarea[0]" id="textarea[0]" placeholder="please fill this out"></my-textarea> 
+
+      <br />
+      <label for="textarea[1]">textarea[1]</label>
+      <my-textarea name="textarea[1]" id="textarea[1]" placeholder="please fill this out" value="this is some value :)"></my-textarea> 
+
+      <br />
+      <label for="textarea[2]">textarea[2]</label>
+      <my-textarea name="textarea[2]" id="textarea[2]" placeholder="please fill this out" value="this is some value :)" disabled required></my-textarea> 
+
+      <br />
+      <label for="textarea[3]">textarea[3]</label>
+      <my-textarea name="textarea[3]" id="textarea[3]" placeholder="please fill this out" required></my-textarea> 
+ 
+    </div>
     <div id="actions">
       <button type="submit">Submit</button>
       <button type="reset">Reset</button>
