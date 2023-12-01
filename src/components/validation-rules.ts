@@ -15,7 +15,7 @@ export const requiredValidator: SyncValidator = {
     return 'Please fill in this field';
   },
   isValid({ required }: HTMLElement & { required: boolean }, value: FormValue): boolean {
-    return !required || !!value;
+        return !required || !!value;
   },
 };
 

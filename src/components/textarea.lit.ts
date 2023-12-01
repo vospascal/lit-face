@@ -124,7 +124,7 @@ export class MyTextarea extends FormControl {
   }
 
   resetFormControl(): void {
-    this.value = this.getAttribute('value') || '';
+    this.value = this.getAttribute('value') || null;
   }
 
   setCustomValidity(message: string) {
