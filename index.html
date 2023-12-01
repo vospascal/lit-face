@@ -11,9 +11,11 @@
   <script type="module" src="/src/components/checkbox.lit.ts"></script>
   <script type="module" src="/src/components/radio.lit.ts"></script>
   <script type="module" src="/src/components/textarea.lit.ts"></script>
+  <script type="module" src="/src/components/snow-effect.lit.ts"></script>
   <style>
     body {
-      padding: 10px
+      padding: 10px;
+      background:red;
     }
 
     form {
@@ -82,11 +84,15 @@
     /* my-input:--valid:--touched  {
         background-color: green;
       } */
+
+      snow-effect {
+        position: absolute;
+      }
   </style>
 </head>
 
 <body>
-
+  <snow-effect></snow-effect>
   <form>
     <div>
       <label for="checkboxGroup[0]">checkboxGroup[0]</label>
