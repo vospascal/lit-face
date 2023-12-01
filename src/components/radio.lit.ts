@@ -6,7 +6,7 @@ import { live } from "lit/directives/live.js";
 
 import emit from "./emit"
 
-import { requiredValidatorChecked } from "./validation-rules"
+import { requiredValidatorRadio } from "./validation-rules"
 
 const SPACE = 'Space';
 const ENTER = 'Enter'
@@ -38,7 +38,8 @@ export class MyRadio extends FormControl {
       }
     `;
 
-  static formControlValidators = [requiredValidatorChecked];
+  static formControlValidationGroup = true;
+  static formControlValidators = [requiredValidatorRadio];
 
   @property({ type: String }) value?: string;
   @property({ type: String }) name?: string;
@@ -192,10 +193,8 @@ export class MyRadio extends FormControl {
 
   uncheckSiblings() {
     this.getRootNode().querySelectorAll(`my-radio[name="${this.name}"]`).forEach((item => {
-      console.log(item, this, item !== this)
-      // set property to false
+      // set checked property to false
       item !== this && (item.checked = false)
-
     }))
   }
 
