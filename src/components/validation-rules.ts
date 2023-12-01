@@ -39,12 +39,8 @@ export const requiredValidatorRadio: SyncValidator = {
     const selector = `${instance.localName}[name="${instance.getAttribute('name')}"]`;
     const group = Array.from(rootNode.querySelectorAll(selector));
 
-    console.log(group, 'group')
     const isChecked = group.some((instance) => instance.checked);
     const isRequired = group.some(instance => instance.required);
-
-    console.log(isRequired, 'isRequired')
-    console.log(isChecked, 'isChecked')
 
     if (isRequired && !isChecked) {
       return false;

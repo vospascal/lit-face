@@ -538,16 +538,12 @@ class FormControl extends LitElement {
 
     this.touchedState(this.touched)
     this.pristineState(this.pristine)
-  }
+    this.dirtyState(this.dirty)
 
-
-  checkedState(flag: boolean): void {
-    if (flag) {
-      this.internals.states.add('--checked');
-    } else {
-      this.internals.states.delete('--checked');
-    }
+    // work around 
+    this.removeAttribute('aria-invalid');
   }
+  
 
   dirtyState(flag: boolean): void {
     if (!this.internals.states) return
@@ -602,10 +598,24 @@ class FormControl extends LitElement {
     const checkableInputTypes = ["checkbox", "radio"] as InputType[];
     return checkableInputTypes.includes(this.inputType);
   }
-  
+
 
 }
 
 
 
 export default FormControl
+
+
+
+          // /** If the element is part of a formControlValidationGroup, reset those values */
+          // if (proto.formControlValidationGroup === true) {
+          //   this.#formValidationGroup.forEach(control => {
+          //     /** Don't duplicate effort */
+          //     console.log(control)
+          //     // if (control !== this) {
+          //     //   control.internals.setValidity({});
+          //     // }
+          //     this.internals.setValidity({});
+          //   });
+          // }

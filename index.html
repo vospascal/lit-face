@@ -88,17 +88,6 @@
 
   <form>
     <div>
-      <label for="inputTest">inputTest</label>
-      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" 
-        pattern="\d{4,4}" required></my-input>
-      <br />
-      <label for="inputTesting">inputTesting</label>
-      <my-input name="myInput" value="" id="inputTesting"  pattern="\d{4,4}" required></my-input>
-      <br />
-      <label for="checkboxSingle">checkboxSingle</label>
-      <my-checkbox name="checkboxSingle" id="checkboxSingle" required></my-checkbox>
-    </div>
-    <div>
       <label for="checkboxGroup[0]">checkboxGroup[0]</label>
       <my-checkbox name="checkboxGroup" value="cake" id="checkboxGroup[0]" required></my-checkbox>
       <br />
@@ -113,6 +102,18 @@
       <br />
       <label for="checkboxGroup[4]">checkboxGroup[4]</label>
       <my-checkbox name="checkboxGroup" value="marshmallows" id="checkboxGroup[4]"  disabled></my-checkbox>
+    </div>
+    <hr />
+    <div>
+      <label for="inputTest">inputTest</label>
+      <my-input name="myInputField" value="" placeholder="type something" id="inputTest" 
+        pattern="\d{4,4}" required></my-input>
+      <br />
+      <label for="inputTesting">inputTesting</label>
+      <my-input name="myInput" value="" id="inputTesting"  pattern="\d{4,4}" ></my-input>
+      <br />
+      <label for="checkboxSingle">checkboxSingle</label>
+      <my-checkbox name="checkboxSingle" id="checkboxSingle" required></my-checkbox>
     </div>
     <hr />
     <div>

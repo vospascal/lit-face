@@ -30,13 +30,20 @@ export class MyRadio extends FormControl {
   static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
   static styles = css`
-      :host(:--invalid:--touched:not(:focus)) input {
-        outline: 2px dashed red !important;
-      }
-      :host(:--valid:--touched) input {
-        outline: 2px dashed green!important;
-      }
-    `;
+    :host(:--invalid:--touched:not(:focus)) input {
+      outline: 2px dotted red;
+      outline-offset: 2px;
+    }
+    :host(:--valid:--touched) input {
+      outline: 2px dotted green;
+      outline-offset: 2px;
+    }
+
+    :host(:--checked) input { 
+      outline: 2px solid green!important;
+      outline-offset: 2px;
+    }
+  `;
 
   static formControlValidationGroup = true;
   static formControlValidators = [requiredValidatorRadio];
@@ -54,6 +61,10 @@ export class MyRadio extends FormControl {
 
   override get validationTarget(): HTMLInputElement {
     return this.checkbox as HTMLInputElement;
+  }
+
+  shouldFormValueUpdate(): boolean {
+    return !!this.checked;
   }
 
   protected firstUpdated(_changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>): void {
@@ -74,7 +85,6 @@ export class MyRadio extends FormControl {
       }
     }
   }
-
 
   render() {
     // the html template not in sync with this state
@@ -114,6 +124,7 @@ export class MyRadio extends FormControl {
   }
 
   formResetCallback() {
+    super.formResetCallback()
     // The checked property does not reflect, so the original attribute set by
     // the user is used to determine the default value.
     this.checked = this.hasAttribute('checked');
@@ -198,32 +209,16 @@ export class MyRadio extends FormControl {
     }))
   }
 
+  validationMessageCallback(): void {
+    if (!this.validity.valid) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
+  }
+
   protected override updated(changedProperties: Map<string, any>) {
     super.updated(changedProperties);
-
-    // if checked prop has changed broadcast right value
-    if (changedProperties.has('checked')) {
-      if (this.checked) {
-        this.setValue(this.value)
-      } else {
-        this.setValue(null)
-      }
-    }
-
-    if (changedProperties.has('invalid')) {
-      if (this.validity.valid) {
-        this.setAttribute('aria-invalid', 'true');
-      } else {
-        this.removeAttribute('aria-invalid');
-      }
-    }
-    if (changedProperties.has('checked')) {
-      if (this.checked) {
-        this.setAttribute('aria-checked', 'true');
-      } else {
-        this.setAttribute('aria-checked', 'false');
-      }
-    }
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.setAttribute('aria-disabled', 'true');
@@ -231,8 +226,14 @@ export class MyRadio extends FormControl {
         this.removeAttribute('aria-disabled');
       }
     }
+    // if checked prop has changed broadcast right value
+    if (changedProperties.has('checked')) {
+      this.internals.states[!!this.checked ? 'add' : 'delete']('--checked');
+      this.setValue(this.checked ? this.value : null)
+      this.setAttribute('aria-checked', this.checked ? "true" : "false")
+    }
   }
+
 
 }
 
-//ria-invalid

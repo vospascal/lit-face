@@ -16,13 +16,15 @@ export class MyInput extends FormControl {
   static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
   static styles = css`
-      :host(:--invalid:--touched:not(:focus)) input {
-        border: 2px dashed red !important;
-      }
-      :host(:--valid:--touched) input {
-        border: 2px dashed green!important;
-      }
-    `;
+    :host(:--invalid:--touched:not(:focus)) input {
+      outline: 2px dotted red;
+      outline-offset: 2px;
+    }
+    :host(:--valid:--touched) input {
+      outline: 2px dotted green;
+      outline-offset: 2px;
+    }
+  `;
 
   static formControlValidators = [requiredValidator, minLengthValidator, patternValidator];
 
@@ -52,8 +54,6 @@ export class MyInput extends FormControl {
       this.setValue(this.value);
     }
 
-    // // important to sync the validation states
-    // this.requestUpdate()
   }
 
   render() {
@@ -85,7 +85,6 @@ export class MyInput extends FormControl {
             placeholder=${this.placeholder || nothing}
             required=${this.required || nothing}
             pattern=${this.pattern || nothing}
-            aria-valid=${this.validity.valid}
         />
         `
   }
@@ -118,7 +117,7 @@ export class MyInput extends FormControl {
     this.disabled = disabled;
   }
 
-  formResetCallback() {
+  resetFormControl(): void {
     this.value = this.getAttribute('value') || '';
   }
 
@@ -137,16 +136,16 @@ export class MyInput extends FormControl {
     }
   }
 
+  validationMessageCallback(): void {
+    if (!this.validity.valid) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
+  }
 
   protected override updated(changedProperties: Map<string, any>) {
     super.updated(changedProperties);
-    if (changedProperties.has('invalid')) {
-      if (this.validity.valid) {
-        this.setAttribute('aria-invalid', 'true');
-      } else {
-        this.removeAttribute('aria-invalid');
-      }
-    }
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.setAttribute('aria-disabled', 'true');
