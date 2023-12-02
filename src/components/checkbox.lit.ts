@@ -96,7 +96,6 @@ export class MyCheckbox extends FormControl {
     // console.table(validationStatus)
 
     return html`
-        <span>${JSON.stringify(validationStatus)}</span>
         <input
             type="checkbox"
             .value=${this.value}
@@ -108,7 +107,8 @@ export class MyCheckbox extends FormControl {
             .indeterminate="${this.indeterminate}"
             @change="${this.#onChange}"
         />
-        `
+        <span>${JSON.stringify(validationStatus)}</span>
+      `
   }
 
 

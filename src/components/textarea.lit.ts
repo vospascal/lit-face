@@ -75,24 +75,24 @@ export class MyTextarea extends FormControl {
     // console.table(validationStatus)
 
     return html`
-        <span>${JSON.stringify(validationStatus)}</span>
-        <textarea
-            .value=${this.value}
-            name=${this.name}
-            @focus=${this.#onFocus}
-            @blur=${this.#onBlur}
-            @input=${this.#onInput}
-            @change=${this.#onChange}
-            ?disabled=${this.disabled}
-            ?readonly=${this.readonly}
-            placeholder=${this.placeholder || nothing}
-            required=${this.required || nothing}
-            maxlength=${this.maxlength || nothing}
-            minlength=${this.minlength || nothing}
-            rows=${this.rows || nothing}
-            cols=${this.cols || nothing}
-            wrap=${this.wrap || nothing}            
-        />
+      <textarea
+          .value=${this.value}
+          name=${this.name}
+          @focus=${this.#onFocus}
+          @blur=${this.#onBlur}
+          @input=${this.#onInput}
+          @change=${this.#onChange}
+          ?disabled=${this.disabled}
+          ?readonly=${this.readonly}
+          placeholder=${this.placeholder || nothing}
+          required=${this.required || nothing}
+          maxlength=${this.maxlength || nothing}
+          minlength=${this.minlength || nothing}
+          rows=${this.rows || nothing}
+          cols=${this.cols || nothing}
+          wrap=${this.wrap || nothing}            
+      />
+      <span>${JSON.stringify(validationStatus)}</span>
     `
   }
 

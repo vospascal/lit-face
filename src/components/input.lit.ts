@@ -71,22 +71,22 @@ export class MyInput extends FormControl {
     // console.table(validationStatus)
 
     return html`
-        <span>${JSON.stringify(validationStatus)}</span>
-        <input
-            type="text"
-            .value=${this.value}
-            name=${this.name}
-            @focus=${this.#onFocus}
-            @blur=${this.#onBlur}
-            @input=${this.#onInput}
-            @change=${this.#onChange}
-            ?disabled=${this.disabled}
-            ?readonly=${this.readonly}
-            placeholder=${this.placeholder || nothing}
-            required=${this.required || nothing}
-            pattern=${this.pattern || nothing}
-        />
-        `
+      <input
+          type="text"
+          .value=${this.value}
+          name=${this.name}
+          @focus=${this.#onFocus}
+          @blur=${this.#onBlur}
+          @input=${this.#onInput}
+          @change=${this.#onChange}
+          ?disabled=${this.disabled}
+          ?readonly=${this.readonly}
+          placeholder=${this.placeholder || nothing}
+          required=${this.required || nothing}
+          pattern=${this.pattern || nothing}
+      />
+      <span>${JSON.stringify(validationStatus)}</span>
+    `
   }
 
 

@@ -101,20 +101,20 @@ export class MyRadio extends FormControl {
     // console.table(validationStatus)
 
     return html`
-        <span>${JSON.stringify(validationStatus)}</span>
-        <input
-            type="radio"
-            .value=${this.value}
-            .checked=${live(this.checked)}
-            name=${this.name}
-            ?disabled=${this.disabled}
-            ?readonly=${this.readonly}
-            ?required=${this.required}
-            aria-checked=${this.checked}
-            aria-valid=${this.validity.valid}
-            @change="${this.#onChange}"
-        />
-        `
+      <input
+          type="radio"
+          .value=${this.value}
+          .checked=${live(this.checked)}
+          name=${this.name}
+          ?disabled=${this.disabled}
+          ?readonly=${this.readonly}
+          ?required=${this.required}
+          aria-checked=${this.checked}
+          aria-valid=${this.validity.valid}
+          @change="${this.#onChange}"
+      />
+      <span>${JSON.stringify(validationStatus)}</span>
+    `
   }
 
 
