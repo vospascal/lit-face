@@ -121,6 +121,11 @@ export class MyCheckbox extends FormControl {
     // The checked property does not reflect, so the original attribute set by
     // the user is used to determine the default value.
     this.checked = this.hasAttribute('checked');
+    if (this.checked) {
+      this.setValue(this.value || "on");
+    } else {
+      this.setValue(null);
+    }
   }
 
   setCustomValidity(message: string) {

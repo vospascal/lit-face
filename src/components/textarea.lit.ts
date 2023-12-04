@@ -1,7 +1,8 @@
 import FormControl, { InputType } from "../form-control/FormControl";
 
-import { LitElement, PropertyValueMap, css, html, nothing } from 'lit'
-import { customElement, property, query, state } from 'lit/decorators.js'
+import { LitElement, PropertyValueMap, css, html, nothing} from 'lit'
+import { customElement, property, query, state,  } from 'lit/decorators.js'
+import { styleMap } from "lit/directives/style-map.js";
 
 import emit from "./emit"
 
@@ -41,6 +42,9 @@ export class MyTextarea extends FormControl {
   @property({ type: String }) cols?: string;
   @property({ type: String }) wrap?: string;
 
+  @property({ type: Boolean }) autoHeight? : boolean= true;
+  
+
   /** @private true */
   @query("textarea") input?: HTMLTextAreaElement;
 
@@ -58,10 +62,32 @@ export class MyTextarea extends FormControl {
       this.setValue(this.value);
     }
 
+    if (this.autoHeight) {
+      requestAnimationFrame(() => {
+        this.autoResize();
+      });
+    }
+
+  }
+
+  @state()
+  private customScrollHeight: string | null = null;
+
+  private autoResize() {
+
+    this.validationTarget.style.height = "auto";
+    const scrollHeight = this.validationTarget.scrollHeight;
+
+    this.customScrollHeight = `${scrollHeight}px`;
+    this.validationTarget.style.removeProperty("height");
   }
 
   render() {
     // the html template not in sync with this state
+
+    const styles = {
+      "height": this.customScrollHeight,
+    };
 
     const validationStatus = {
       dirty: this.dirty,
@@ -76,6 +102,7 @@ export class MyTextarea extends FormControl {
 
     return html`
       <textarea
+          style=${styleMap(styles)}
           .value=${this.value}
           name=${this.name}
           @focus=${this.#onFocus}
@@ -91,7 +118,7 @@ export class MyTextarea extends FormControl {
           rows=${this.rows || nothing}
           cols=${this.cols || nothing}
           wrap=${this.wrap || nothing}            
-      />
+      ></textarea>
       <span>${JSON.stringify(validationStatus)}</span>
     `
   }
@@ -110,6 +137,8 @@ export class MyTextarea extends FormControl {
     this.value = this.input!.value;
     emit(this, "input", this.value);
     this.setValue(this.value);
+
+    this.autoResize()
   };
 
   #onChange = (event: Event) => {
@@ -125,6 +154,13 @@ export class MyTextarea extends FormControl {
 
   resetFormControl(): void {
     this.value = this.getAttribute('value') || null;
+    this.setValue(this.value);
+
+    if (this.autoHeight) {
+      requestAnimationFrame(() => {
+        this.autoResize();
+      });
+    }
   }
 
   setCustomValidity(message: string) {
@@ -160,5 +196,7 @@ export class MyTextarea extends FormControl {
       }
     }
   }
+
+
 
 }

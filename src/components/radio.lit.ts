@@ -61,6 +61,11 @@ export class MyRadio extends FormControl {
 
   override get validationTarget(): HTMLInputElement {
     return this.checkbox as HTMLInputElement;
+    if (this.checked) {
+      this.setValue(this.value || "on");
+    } else {
+      this.setValue(null);
+    }
   }
 
   shouldFormValueUpdate(): boolean {

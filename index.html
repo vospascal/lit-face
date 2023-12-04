@@ -18,25 +18,31 @@
     }
     body {
       padding: 10px;
-      background-image: url("/src/assets/bg.jpg");
+      /* background-image: url("/src/assets/bg.jpg");
       background-repeat: repeat;
-      background-size: 50%;
+      background-size: 50%; */
     }
 
     form {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.35);
       backdrop-filter: blur(5px);
       display: flex;
       flex-direction: column;
       gap: 1rem;
       width: fit-content;
-      border: 2px dashed gainsboro;
-      padding: 10px
+      background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='white' stroke-width='2' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+      padding: 10px;
     }
     
     label {
       font-weight: bold;
     }
+
+    hr{
+      border: 0;
+      height: 1px;
+      width: 100%;
+      background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='white' stroke-width='2' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");    }
 
     #actions {
       display: flex;
@@ -119,7 +125,7 @@
       <label for="checkboxGroup[4]">checkboxGroup[4]</label>
       <my-checkbox name="checkboxGroup" value="marshmallows" id="checkboxGroup[4]"  disabled></my-checkbox>
     </div>
-    <hr />
+  <hr>
     <div>
       <label for="inputTest">inputTest</label>
       <my-input name="myInputField" value="" placeholder="type something" id="inputTest" 
@@ -131,7 +137,26 @@
       <label for="checkboxSingle">checkboxSingle</label>
       <my-checkbox name="checkboxSingle" id="checkboxSingle" required></my-checkbox>
     </div>
-    <hr />
+    <hr>
+    <div>
+      <br />
+      <label for="textarea[0]">textarea[0]</label>
+      <my-textarea name="textarea[0]" id="textarea[0]" placeholder="please fill this out"></my-textarea> 
+
+      <br />
+      <label for="textarea[1]">textarea[1]</label>
+      <my-textarea name="textarea[1]" id="textarea[1]" placeholder="please fill this out" value="this is some value :)"></my-textarea> 
+
+      <br />
+      <label for="textarea[2]">textarea[2]</label>
+      <my-textarea name="textarea[2]" id="textarea[2]" placeholder="please fill this out" value="this is some value :)" disabled="" required=""></my-textarea> 
+
+      <br />
+      <label for="textarea[3]">textarea[3]</label>
+      <my-textarea name="textarea[3]" id="textarea[3]" placeholder="please fill this out" required="" maxlength="10"></my-textarea> 
+ 
+    </div>
+    <hr>
     <div>
       <label for="radioGroup[0]">radioGroup[0]</label>
       <my-radio name="radioGroup" value="iced tea" id="radioGroup[0]" required></my-radio>
@@ -157,25 +182,7 @@
       <my-radio name="radioGroup" value="milkshakes" id="radioGroup[5]" disabled></my-radio>
 
     </div>
-    <hr />
-    <div>
-      <br />
-      <label for="textarea[0]">textarea[0]</label>
-      <my-textarea name="textarea[0]" id="textarea[0]" placeholder="please fill this out"></my-textarea> 
 
-      <br />
-      <label for="textarea[1]">textarea[1]</label>
-      <my-textarea name="textarea[1]" id="textarea[1]" placeholder="please fill this out" value="this is some value :)"></my-textarea> 
-
-      <br />
-      <label for="textarea[2]">textarea[2]</label>
-      <my-textarea name="textarea[2]" id="textarea[2]" placeholder="please fill this out" value="this is some value :)" disabled required></my-textarea> 
-
-      <br />
-      <label for="textarea[3]">textarea[3]</label>
-      <my-textarea name="textarea[3]" id="textarea[3]" placeholder="please fill this out" required></my-textarea> 
- 
-    </div>
     <div id="actions">
       <button type="submit">Submit</button>
       <button type="reset">Reset</button>
@@ -234,7 +241,7 @@
     <li>- Valid: The data entered by the user meets the validation criteria. The control is considered valid according
       to the defined rules.</li>
   </ul>
-  <snow-effect></snow-effect>
+  <!-- <snow-effect></snow-effect> -->
 
 </body>
 
