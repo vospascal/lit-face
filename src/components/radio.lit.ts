@@ -86,6 +86,7 @@ export class MyRadio extends FormControl {
       if (this.checked) {
         this.setValue(this.value || "on");
       } else {
+        // important to set this to null else it doesnt validate
         this.setValue(null);
       }
     }

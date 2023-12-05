@@ -52,6 +52,9 @@ export class MyInput extends FormControl {
 
     if (this.hasAttribute("value")) {
       this.setValue(this.value);
+    }else {
+      // important to set this to null else it doesnt validate
+      this.setValue(null);
     }
 
   }
