@@ -68,11 +68,8 @@ export class MyCheckbox extends FormControl {
       return;
     }
 
-    if (this.hasAttribute("value") && !this.isCheckable()) {
-      this.setValue(this.value || "");
-    }
 
-    if (this.hasAttribute("value") && this.isCheckable()) {
+    if (this.hasAttribute("value")) {
       if (this.checked) {
         this.setValue(this.value || "on");
       } else {
@@ -80,6 +77,7 @@ export class MyCheckbox extends FormControl {
         this.setValue(null);
       }
     }
+    this.setValue(null);
   }
 
   render() {
@@ -149,7 +147,7 @@ export class MyCheckbox extends FormControl {
     if (this.checked) {
       this.setValue(this.value);
     } else {
-      this.setValue("");
+      this.setValue(null);
     }
   }
 

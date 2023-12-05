@@ -55,17 +55,13 @@ export class MyRadio extends FormControl {
   @property({ type: Boolean }) checked?: boolean = false;
   @property({ type: Boolean }) required?: boolean = false;
 
+  
 
   /** @private true */
   @query("input") checkbox?: HTMLInputElement;
 
   override get validationTarget(): HTMLInputElement {
     return this.checkbox as HTMLInputElement;
-    if (this.checked) {
-      this.setValue(this.value || "on");
-    } else {
-      this.setValue(null);
-    }
   }
 
   shouldFormValueUpdate(): boolean {
@@ -78,11 +74,7 @@ export class MyRadio extends FormControl {
       return;
     }
 
-    if (this.hasAttribute("value") && !this.isCheckable()) {
-      this.setValue(this.value || "");
-    }
-
-    if (this.hasAttribute("value") && this.isCheckable()) {
+    if (this.hasAttribute("value")) {
       if (this.checked) {
         this.setValue(this.value || "on");
       } else {
@@ -91,6 +83,13 @@ export class MyRadio extends FormControl {
       }
     }
   }
+
+
+
+
+
+
+  // todo: fix focus
 
   render() {
     // the html template not in sync with this state
@@ -158,18 +157,72 @@ export class MyRadio extends FormControl {
     if (this.checked) {
       this.setValue(this.value);
     } else {
-      this.setValue("");
+      this.setValue(null);
     }
+    this.uncheckSiblings()
   }
 
   #selectPrevious(event: KeyboardEvent) {
-    console.log('selectPrevious')
+    const prevNode = this.#findNextEnabledElement(-1)
+    // this.getRootNode().querySelectorAll(`my-radio[name="${this.name}"]`).forEach((item => {
+    Array.from(this.formValidationGroup).forEach((item => {
+      item !== prevNode ? (item.checked = false) : (item.checked = true)
+    }))
+    
+    prevNode?.focus()
+
+    emit(this, "change", this.checked);
+    if (this.checked) {
+      this.setValue(this.value);
+    } else {
+      this.setValue(null);
+    }
+
     event.preventDefault()
   }
 
   #selectNext(event: KeyboardEvent) {
-    console.log('selectNext')
+    const nextNode = this.#findNextEnabledElement(1)
+    // this.getRootNode().querySelectorAll(`my-radio[name="${this.name}"]`).forEach((item => {
+    Array.from(this.formValidationGroup).forEach((item => {
+      item !== nextNode ? (item.checked = false) : (item.checked = true)
+    }))
+
+    nextNode?.focus()
+
+    emit(this, "change", this.checked);
+    if (this.checked) {
+      this.setValue(this.value);
+    } else {
+      this.setValue(null);
+    }
+
     event.preventDefault()
+  }
+
+  #findNextEnabledElement(direction: number = 1): MyRadio | null {
+    const formValidationGroupArray = Array.from(this.formValidationGroup);
+    const origin = Array.from(this.formValidationGroup).findIndex(x => x.checked)
+    const len = formValidationGroupArray.length;
+    let i = 1;
+  
+    while (i < len) {
+      let checkIndex = (origin + i * direction) % len;
+  
+      if (checkIndex < 0) {
+        checkIndex += len;
+      }
+  
+      const nextElement = formValidationGroupArray[checkIndex];
+  
+      if (!nextElement.disabled && nextElement !== this.checked) {
+        return nextElement;
+      }
+  
+      i++;
+    }
+  
+    return null;
   }
 
   #onKeydown(event: KeyboardEvent) {
@@ -190,6 +243,7 @@ export class MyRadio extends FormControl {
         break
     }
   }
+
 
   #onClick(event: Event) {
     if (this.checked || this.disabled) return
@@ -223,13 +277,25 @@ export class MyRadio extends FormControl {
     }
   }
 
+  #findFirstNonDisabledOrChecked(): MyRadio | null {
+    const checkedItem = Array.from(this.formValidationGroup).find(item => item.checked)
+    if(checkedItem){
+      return checkedItem
+    }
+    const firstNotDisabled = Array.from(this.formValidationGroup).find(item => !item.disabled)
+    return firstNotDisabled;
+  }
+
   protected override updated(changedProperties: Map<string, any>) {
     super.updated(changedProperties);
+
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.setAttribute('aria-disabled', 'true');
-      } else {
+        this.setAttribute('tabindex', "-1");
+      } else if(this.#findFirstNonDisabledOrChecked() === this){
         this.removeAttribute('aria-disabled');
+        this.removeAttribute('tabindex');
       }
     }
     // if checked prop has changed broadcast right value
@@ -237,9 +303,17 @@ export class MyRadio extends FormControl {
       this.internals.states[!!this.checked ? 'add' : 'delete']('--checked');
       this.setValue(this.checked ? this.value : null)
       this.setAttribute('aria-checked', this.checked ? "true" : "false")
+      if(this.checked){
+        this.removeAttribute('tabindex')
+      } else if(this.#findFirstNonDisabledOrChecked() === this) {
+        this.removeAttribute('tabindex')
+      }else {
+        this.setAttribute('tabindex','-1')
+      }
     }
   }
 
 
 }
+
 

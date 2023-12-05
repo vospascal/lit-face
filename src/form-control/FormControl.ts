@@ -115,7 +115,8 @@ class FormControl extends LitElement {
   #awaitingValidationTarget = true;
 
   /** All of the controls within a root with a matching local name and form name */
-  get #formValidationGroup(): NodeListOf<FormControl> {
+  // this use to be private.. but could be better used to use keyboard navigation
+  get formValidationGroup(): NodeListOf<FormControl> {
     const rootNode = this.getRootNode() as HTMLElement;
     const selector = `${this.localName}[name="${this.getAttribute('name')}"]`;
     return rootNode.querySelectorAll<FormControl>(selector);
@@ -544,6 +545,8 @@ class FormControl extends LitElement {
 
     // work around 
     this.removeAttribute('aria-invalid');
+
+    //todo: fix validity state doesnt reset
   }
   
 
@@ -595,16 +598,7 @@ class FormControl extends LitElement {
       this.internals.states.delete('--error');
     }
   }
-
-  isCheckable() {
-    const checkableInputTypes = ["checkbox", "radio"] as InputType[];
-    return checkableInputTypes.includes(this.inputType);
-  }
-
-
 }
-
-
 
 export default FormControl
 
