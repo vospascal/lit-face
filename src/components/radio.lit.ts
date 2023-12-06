@@ -30,6 +30,12 @@ export class MyRadio extends FormControl {
   static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
   static styles = css`
+    :host(:--invalid:--touched:focus){
+      background:#e6adad;
+    }
+    :host(:--valid:--touched:focus){
+      background:#ade6b4;
+    }
     :host(:--invalid:--touched:not(:focus)) input {
       outline: 2px dotted red;
       outline-offset: 2px;
@@ -84,11 +90,6 @@ export class MyRadio extends FormControl {
     }
   }
 
-
-
-
-
-
   // todo: fix focus
 
   render() {
@@ -133,6 +134,14 @@ export class MyRadio extends FormControl {
     // The checked property does not reflect, so the original attribute set by
     // the user is used to determine the default value.
     this.checked = this.hasAttribute('checked');
+    
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', 'true');
+      this.setAttribute('tabindex', "-1");
+    } else if(this.#findFirstNonDisabledOrChecked() === this){
+      this.removeAttribute('aria-disabled');
+      this.removeAttribute('tabindex');
+    }
   }
 
   setCustomValidity(message: string) {

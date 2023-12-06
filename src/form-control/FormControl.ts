@@ -422,7 +422,7 @@ class FormControl extends LitElement {
     }
 
     // New: Map to store group validation results
-    const groupValidationResults = new Map<string, { validity: Partial<ValidityState>, validationMessage: string | undefined }>
+    const groupValidationResults = new Map<string, { validity: Partial<ValidityState>, validationMessage: string | undefined, isValid: boolean }>
 
     validators.forEach(validator => {
       const key = validator.key || 'customError';
@@ -445,7 +445,7 @@ class FormControl extends LitElement {
 
           // Modified: Store the validator key, validity, and message in the group validation map
           if (this.#isPartOfValidationGroup()) {
-            groupValidationResults.set(key, { validity, validationMessage });
+            groupValidationResults.set(key, { validity, validationMessage, isValid: isValidatorValid });
           }
         });
       } else {
@@ -465,7 +465,7 @@ class FormControl extends LitElement {
 
         // Modified: Store the validator key, validity, and message in the group validation map
         if (this.#isPartOfValidationGroup()) {
-          groupValidationResults.set(key, { validity, validationMessage });
+          groupValidationResults.set(key, { validity, validationMessage, isValid });
         }
       }
     });
@@ -504,9 +504,15 @@ class FormControl extends LitElement {
     return proto.formControlValidationGroup;
   }
 
-  #applyGroupValidationResults(groupValidationResults: Map<string, { validity: Partial<ValidityState>, validationMessage: string| undefined }>): void {
+  #applyGroupValidationResults(groupValidationResults: Map<string, { validity: Partial<ValidityState>, validationMessage: string| undefined, isValid: boolean }>): void {
+    console.log(groupValidationResults)
     this.formValidationGroup.forEach(control => {
-      groupValidationResults.forEach(({ validity, validationMessage }) => {
+      groupValidationResults.forEach(({ validity, validationMessage, isValid }) => {
+        // todo: fix these states
+        control.touched = isValid;
+        control.touchedState(this.touched)
+        // control.#focused = true;
+
         control.internals.setValidity(validity, validationMessage);
         control.#shouldShowError();
       });
@@ -568,6 +574,8 @@ class FormControl extends LitElement {
     this.pristine = true;
 
     this.#forceError = false;
+
+
     this.#shouldShowError();
     this.resetFormControl?.();
 
@@ -575,12 +583,15 @@ class FormControl extends LitElement {
       this.#shouldShowError() ? this.validationMessage : ''
     );
 
+
+
     this.touchedState(this.touched)
     this.pristineState(this.pristine)
     this.dirtyState(this.dirty)
 
     // work around 
     this.removeAttribute('aria-invalid');
+    
 
     //todo: fix validity state doesnt reset
   }

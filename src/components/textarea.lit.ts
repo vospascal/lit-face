@@ -17,6 +17,12 @@ export class MyTextarea extends FormControl {
   static shadowRootOptions = { ...LitElement.shadowRootOptions, delegatesFocus: true };
 
   static styles = css`
+    :host(:--invalid:--touched:focus){
+      background:#e6adad;
+    }
+    :host(:--valid:--touched:focus){
+      background:#ade6b4;
+    }
     :host(:--invalid:--touched:not(:focus)) textarea {
       outline: 2px dotted red;
       outline-offset: 2px;
