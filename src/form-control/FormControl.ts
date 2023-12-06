@@ -421,6 +421,9 @@ class FormControl extends LitElement {
       return;
     }
 
+    // New: Map to store group validation results
+    const groupValidationResults = new Map<string, { validity: Partial<ValidityState>, validationMessage: string | undefined }>
+
     validators.forEach(validator => {
       const key = validator.key || 'customError';
       const isValid = validator.isValid(this, value, abortController.signal);
@@ -436,8 +439,14 @@ class FormControl extends LitElement {
           /** Invert the validity state to correspond to the ValidityState API */
           validity[key] = !isValidatorValid;
 
+
           validationMessage = this.#getValidatorMessageForValue(validator, value);
           this.#setValidityWithOptionalTarget(validity, validationMessage);
+
+          // Modified: Store the validator key, validity, and message in the group validation map
+          if (this.#isPartOfValidationGroup()) {
+            groupValidationResults.set(key, { validity, validationMessage });
+          }
         });
       } else {
         /** Invert the validity state to correspond to the ValidityState API */
@@ -453,6 +462,11 @@ class FormControl extends LitElement {
         if (!isValid && !validationMessage) {
           validationMessage = this.#getValidatorMessageForValue(validator, value);
         }
+
+        // Modified: Store the validator key, validity, and message in the group validation map
+        if (this.#isPartOfValidationGroup()) {
+          groupValidationResults.set(key, { validity, validationMessage });
+        }
       }
     });
 
@@ -463,6 +477,11 @@ class FormControl extends LitElement {
         if (!abortController?.signal.aborted) {
           this.#isValidationPending = false;
           this.#validationCompleteResolver?.();
+          // New: Apply group validation results after all validators have settled
+          if (this.#isPartOfValidationGroup()) {
+            this.#applyGroupValidationResults(groupValidationResults);
+          }
+
         }
       });
 
@@ -477,6 +496,23 @@ class FormControl extends LitElement {
     if (hasChange || !hasAsyncValidators) {
       this.#setValidityWithOptionalTarget(validity, validationMessage);
     }
+  }
+
+
+  #isPartOfValidationGroup(): boolean {
+    const proto = this.constructor as typeof FormControl;
+    return proto.formControlValidationGroup;
+  }
+
+  #applyGroupValidationResults(groupValidationResults: Map<string, { validity: Partial<ValidityState>, validationMessage: string| undefined }>): void {
+    this.formValidationGroup.forEach(control => {
+      groupValidationResults.forEach(({ validity, validationMessage }) => {
+        control.internals.setValidity(validity, validationMessage);
+        control.#shouldShowError();
+      });
+
+    });
+    this.#awaitingValidationTarget = true;
   }
 
   /**
@@ -548,7 +584,7 @@ class FormControl extends LitElement {
 
     //todo: fix validity state doesnt reset
   }
-  
+
 
   dirtyState(flag: boolean): void {
     if (!this.internals.states) return
@@ -601,17 +637,3 @@ class FormControl extends LitElement {
 }
 
 export default FormControl
-
-
-
-          // /** If the element is part of a formControlValidationGroup, reset those values */
-          // if (proto.formControlValidationGroup === true) {
-          //   this.#formValidationGroup.forEach(control => {
-          //     /** Don't duplicate effort */
-          //     console.log(control)
-          //     // if (control !== this) {
-          //     //   control.internals.setValidity({});
-          //     // }
-          //     this.internals.setValidity({});
-          //   });
-          // }
