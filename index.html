@@ -109,7 +109,7 @@
 
 <body>
   <form>
-    <div>
+    <!-- <div>
       <label for="checkboxGroup[0]">checkboxGroup[0]</label>
       <my-checkbox name="checkboxGroup" value="cake" id="checkboxGroup[0]" required></my-checkbox>
       <br />
@@ -156,32 +156,59 @@
       <my-textarea name="textarea[3]" id="textarea[3]" placeholder="please fill this out" required=""></my-textarea> 
  
     </div>
-    <hr>
+    <hr> -->
     <div>
-      <label for="radioGroup[0]">radioGroup[0]</label>
-      <my-radio name="radioGroup" value="iced tea" id="radioGroup[0]" disabled></my-radio>
+      <label for="radioGroup[0]-a">radioGroup[0]-a</label>
+      <my-radio name="radioGroup-a" value="iced tea" id="radioGroup[0]-a" disabled></my-radio>
       <br />
 
-      <label for="radioGroup[1]">radioGroup[1]</label>
-      <my-radio name="radioGroup" value="soda" id="radioGroup[1]" required></my-radio>
+      <label for="radioGroup[1]-a">radioGroup[1]-a</label>
+      <my-radio name="radioGroup-a" value="soda" id="radioGroup[1]-a" required></my-radio>
 
       <br />
-      <label for="radioGroup[2]">radioGroup[2]</label>
-      <my-radio name="radioGroup" value="smoothie" id="radioGroup[2]"></my-radio>
+      <label for="radioGroup[2]-a">radioGroup[2]-a</label>
+      <my-radio name="radioGroup-a" value="smoothie" id="radioGroup[2]-a"></my-radio>
 
       <br />
-      <label for="radioGroup[3]">radioGroup[3]</label>
-      <my-radio name="radioGroup" value="juice" id="radioGroup[3]" ></my-radio>
+      <label for="radioGroup[3]-a">radioGroup[3]-a</label>
+      <my-radio name="radioGroup-a" value="juice" id="radioGroup[3]-a" ></my-radio>
 
       <br />
-      <label for="radioGroup[4]">radioGroup[4]</label>
-      <my-radio name="radioGroup" value="lemonade" id="radioGroup[4]" disabled></my-radio>
+      <label for="radioGroup[4]-a">radioGroup[4]-a</label>
+      <my-radio name="radioGroup-a" value="lemonade" id="radioGroup[4]-a" disabled></my-radio>
 
       <br />
-      <label for="radioGroup[5]">radioGroup[5]</label>
-      <my-radio name="radioGroup" value="milkshakes" id="radioGroup[5]"></my-radio>
+      <label for="radioGroup[5]-a">radioGroup[5]-a</label>
+      <my-radio name="radioGroup-a" value="milkshakes" id="radioGroup[5]-a"></my-radio>
 
     </div>
+
+    <div>
+      <label for="radioGroup[0]-b">radioGroup[0]-b</label>
+      <my-radio name="radioGroup-b" value="lamborghini" id="radioGroup[0]-b" required></my-radio>
+      <br />
+
+      <label for="radioGroup[1]-b">radioGroup[1]-b</label>
+      <my-radio name="radioGroup-b" value="ferrari" id="radioGroup[1]-b" ></my-radio>
+
+      <br />
+      <label for="radioGroup[2]-b">radioGroup[2]-b</label>
+      <my-radio name="radioGroup-b" value="Maserati" id="radioGroup[2]-b"></my-radio>
+    </div>
+
+    <div>
+      <label for="radioGroup[0]-c">radioGroup[0]-c</label>
+      <my-radio name="radioGroup-c" value="lamborghini" id="radioGroup[0]-c" required></my-radio>
+      <br />
+
+      <label for="radioGroup[1]-c">radioGroup[1]-b</label>
+      <my-radio name="radioGroup-c" value="ferrari" id="radioGroup[1]-c" ></my-radio>
+
+      <br />
+      <label for="radioGroup[2]-b">radioGroup[2]-b</label>
+      <my-radio name="radioGroup-c" value="Maserati" id="radioGroup[2]-c"></my-radio>
+    </div>
+    
 
     <div id="actions">
       <button type="submit">Submit</button>
@@ -193,6 +220,7 @@
 
 
   <script>
+
     /** Get a reference to the form */
     const form = document.querySelector('form');
     /** Get the output element to display form data in */
@@ -223,6 +251,11 @@
 
       output.innerHTML = JSON.stringify(data, null, 2);
     });
+
+    const reset = document.querySelector('[type="reset"]'); 
+    reset.addEventListener('click', event => {
+      output.innerHTML= ""
+    })
   </script>
 
 
